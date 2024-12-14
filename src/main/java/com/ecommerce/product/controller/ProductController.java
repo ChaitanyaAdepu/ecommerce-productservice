@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ecommerce.product.interfaces.ProductService;
 import com.ecommerce.product.model.APIResponse;
 import com.ecommerce.product.model.ProductRequest;
+import com.ecommerce.product.model.ProductResponse;
 import com.ecommerce.product.service.ProductServiceImpl;
 
 @RestController
@@ -28,7 +29,7 @@ public class ProductController<T> {
 
 	
 	@Autowired
-	private ProductService productService;
+	private ProductService<T> productService;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Long> addProduct(@RequestBody ProductRequest productReq) {
@@ -39,7 +40,7 @@ public class ProductController<T> {
 	}
 	
 	@GetMapping
-	public APIResponse<T> getProducts(@RequestParam(required = false) Long productId){
+	public ProductResponse getProducts(@RequestParam(required = false) Long productId){
 		return productService.getProducts(productId);
 	}
 	@PostMapping("/reduce-quantity/{id}")
