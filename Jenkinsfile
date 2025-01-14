@@ -16,7 +16,13 @@ pipeline {
                 // git 'https://github.com/ecommerce-order-app/ecommerce-productservice.git'
 
                 // Run Maven on a Unix agent.
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                sh "mvn clean install -Dmaven.test.failure.ignore=true"
+                // Publish JUnit test results
+        junit testResults: '**/target/surefire-reports/*.xml'
+
+        // Publish JaCoCo coverage report
+        publishCoverage adapters: [jacocoAdapter('**/target/site/jacoco/*.xml')], 
+                        sourceFileResolver: sourceFiles('NEVER_STORE')
 
                 // To run Maven on a Windows agent, use
                 // bat "mvn -Dmaven.test.failure.ignore=true clean package"
