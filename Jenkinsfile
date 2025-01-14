@@ -38,9 +38,12 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
-            withSonarQubeEnv() {
+            steps{
+                withSonarQubeEnv() {
                 sh "mvn clean verify sonar:sonar -Dsonar.projectKey=productservice -Dsonar.projectName='ProductService'"
+                }
             }
+            
         }
         stage("CVC"){
             steps{
