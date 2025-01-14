@@ -40,7 +40,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv("SonarQubeDev") {
-                sh "mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=ch@Sonar6292 -Dsonar.projectKey=productservice -Dsonar.projectName='ProductService'"
+                sh "mvn clean verify sonar:sonar -Dsonar.host.url=http://172.18.0.2:9091 -Dsonar.login=admin -Dsonar.password=ch@Sonar6292 -Dsonar.projectKey=productservice -Dsonar.projectName='ProductService'"
                     //-DskipTests -Dmaven.clean.skip=true
                 }
             }
