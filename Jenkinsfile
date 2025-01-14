@@ -34,7 +34,7 @@ pipeline {
         stage("CVC"){
             steps{
                 sh "cd /var/jenkins_home/workspace/Test/"
-                dependencyCheck additionalArguments: '--scan=\'./**/*.jar\' --format XML --project Test', odcInstallation: 'OWASP Dependency-Check Plugin'
+                dependencyCheck additionalArguments: '--noupdate --scan=\'./**/*.jar\' --format XML --project Test', odcInstallation: 'OWASP Dependency-Check Plugin'
                 dependencyCheckPublisher pattern: '$WORKSPACE/dependency-check-report.xml'
                 archiveArtifacts allowEmptyArchive:true , artifacts: 'dependency-check-report.xml', onlyIfSuccessful: true
             }
