@@ -13,5 +13,7 @@ public class ProductsDTO {
 	private String productName;
 	private Float price;
 	private Long quantity;
+	private Float rating;
+	private String[] imageURL;
 	
 }

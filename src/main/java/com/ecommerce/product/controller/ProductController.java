@@ -42,12 +42,18 @@ public class ProductController<T> {
 	}
 
 	@GetMapping
-	public ProductResponse getProducts(@RequestParam(required = false) Long productId, 
+	public ProductResponse getProducts(
 			@RequestParam(required = false) String category,
 			@RequestParam(required = false,defaultValue = "0") int page,
 			@RequestParam(required = false,defaultValue = "10") int perPage){
 
-		return productService.getProducts(productId, category, page, perPage);
+		return productService.getProducts( category, page, perPage);
+
+	}
+	@GetMapping("/{id}")
+	public ProductResponse getProductById(@PathVariable(name = "id", required = false) Long productId){
+
+		return productService.getProductByProductId(productId);
 
 	}
 	@GetMapping("/categories")

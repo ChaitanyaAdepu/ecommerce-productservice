@@ -11,7 +11,10 @@ public interface ProductService<T> {
 	
 //	APIResponse<T> getProducts(Long productId);
 
-	ProductResponse getProducts(Long productId, String category, int page, int perPage);
+	ProductResponse getProducts(String category, int page, int perPage);
+	
+	ProductResponse getProductByProductId(Long productId);
+
 
 	APIResponse<T> reduceQuantity(Long productId, Long quantity);
 }

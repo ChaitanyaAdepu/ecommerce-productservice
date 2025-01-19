@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.commonlib.exception.AppServiceException;
 import com.ecommerce.product.aspect.Loggable;
 import com.ecommerce.product.dao.CategoryRepo;
+import com.ecommerce.product.dao.ProductImagesRepo;
 import com.ecommerce.product.dao.ProductRepo;
+import com.ecommerce.product.dao.ProductReviewsRepo;
 import com.ecommerce.product.entity.Category;
 import com.ecommerce.product.entity.Product;
+import com.ecommerce.product.entity.ProductImages;
 import com.ecommerce.product.interfaces.ProductService;
 import com.ecommerce.product.model.APIResponse;
 import com.ecommerce.product.model.ProductRequest;
@@ -34,6 +37,12 @@ public class ProductServiceImpl<T> implements ProductService<T>{
 	
 	@Autowired
 	private CategoryRepo categoryRepo;
+	
+	@Autowired
+	private ProductImagesRepo imagesRepo;
+	
+	@Autowired
+	private ProductReviewsRepo reviewsRepo;
 
 	@Override
 	public void test() {
@@ -72,17 +81,16 @@ public class ProductServiceImpl<T> implements ProductService<T>{
 	}
 	@Override
 	@Loggable
-	public ProductResponse getProducts(Long productId, String category, int page, int perPage) {
+	public ProductResponse getProducts(String category, int page, int perPage) {
 		
-		if(productId != null) {
-			return getProductByProductId(productId);
-		}
+		
 		if(category != null) {
 			return getProductsByCategory(category, page, perPage);
 		}
 		return getAllProducts(page, perPage);
     }
-	private ProductResponse getProductByProductId(Long productId) {
+	@Override
+	public ProductResponse getProductByProductId(Long productId) {
 		ProductResponse pr = new ProductResponse();
 		Optional<Product>  productOpt = productRepo.findById(productId);
 		if(!productOpt.isPresent()) {
@@ -93,13 +101,15 @@ public class ProductServiceImpl<T> implements ProductService<T>{
 		ProductsDTO singleProduct = new ProductsDTO();
 		singleProduct.setProductId(product.getProductId());
 		singleProduct.setProductName(product.getProductName());
-		
+		singleProduct.setRating(getProductAvgRating(product));
+		singleProduct.setImageURL(getProductImageURL(product));
 		List<ProductsDTO> listProducts = new ArrayList<>();
 		listProducts.add(singleProduct);
 		
 		pr.setProducts(listProducts);
 		return pr;
 	}
+	@Loggable
 	private ProductResponse getProductsByCategory(String category, int page, int perPage) {
 		ProductResponse pr = new ProductResponse();
 		List<Product>  productList = productRepo.findByCategory(category);
@@ -114,6 +124,8 @@ public class ProductServiceImpl<T> implements ProductService<T>{
     		singleProduct.setProductName(product.getProductName());
     		singleProduct.setQuantity(product.getQuantity());
     		singleProduct.setPrice(product.getPrice());
+    		singleProduct.setRating(getProductAvgRating(product));
+    		singleProduct.setImageURL(getProductImageURL(product));
     		listProducts.add(singleProduct);
 
         }
@@ -122,6 +134,7 @@ public class ProductServiceImpl<T> implements ProductService<T>{
 		
 		return pr;
 	}
+	@Loggable
 	private ProductResponse getAllProducts(int page, int perPage) {
 		ProductResponse pr = new ProductResponse();
 		List<Product>  productList = productRepo.findAll();
@@ -136,12 +149,24 @@ public class ProductServiceImpl<T> implements ProductService<T>{
     		singleProduct.setProductName(product.getProductName());
     		singleProduct.setQuantity(product.getQuantity());
     		singleProduct.setPrice(product.getPrice());
+    		singleProduct.setRating(getProductAvgRating(product));
+    		singleProduct.setImageURL(getProductImageURL(product));
     		listProducts.add(singleProduct);
 
         }
 		
 		pr.setProducts(listProducts);
 		return pr;
+	}
+	private Float getProductAvgRating(Product product) {
+		return reviewsRepo.findAvgRatingByProduct(product);
+	}
+	private String[] getProductImageURL(Product product) {
+		List<String> list = imagesRepo.findImageUrlsByProduct(product);
+		if(list.isEmpty()) {
+	        return null; // Return an array with "NA" if no URLs are found
+		}
+		return list.toArray(new String[0]);
 	}
 	
 

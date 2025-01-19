@@ -23,7 +23,7 @@ public class ProductServiceApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:5175")
+				.allowedOrigins("http://localhost:5174")
 				.allowedMethods("GET", "POST")
 				.allowedHeaders("Origin", "Content-Type", "auth-token", "Access-control-Request-Headers");
 			}
