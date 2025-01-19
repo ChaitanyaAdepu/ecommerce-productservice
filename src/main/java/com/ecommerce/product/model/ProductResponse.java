@@ -1,6 +1,8 @@
 package com.ecommerce.product.model;
 
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponse {
-	Long productId;
-	String productName;
+	
+	List<ProductsDTO> products;
+	
 	
 }
